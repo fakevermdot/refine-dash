@@ -26,6 +26,11 @@ import { Title, Sider, Layout, Header } from "components/layout";
 import { Login, home, Agents, Myprofile, PropertyDetails, AllProperties, CreateProperty, AgentProfile, EditProperty  } from "pages";
 import { CredentialResponse } from "interfaces/google";
 import { parseJwt } from "utils/parse-jwt";
+import propertyDetails from "pages/property-details";
+import createProperty from "pages/create-property";
+import agent from "pages/agent";
+import agentProfile from "pages/agent-profile";
+import myProfile from "pages/my-profile";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
@@ -95,54 +100,58 @@ function App() {
 
   return (
     <ColorModeContextProvider>
-      <CssBaseline />
-      <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
-      <RefineSnackbarProvider>
-        <Refine
-          dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
-          notificationProvider={notificationProvider}
-          ReadyPage={ReadyPage}
-          catchAll={<ErrorComponent />}
-          resources={[
-            {
-              name: "property",
-              list: MuiInferencer,
-              icon: <VillaOutlined />
-            },
-            {
-              name: "agent",
-              list: MuiInferencer,
-              icon: <PeopleAltOutlined/>
-            },
-            {
-              name: "review",
-              list: MuiInferencer,
-              icon: <StarOutlineRounded/>
-            },
-            {
-              name: "message",
-              list: MuiInferencer,
-              icon:<ChatBubbleOutline/>
-            },
-            {
-              name: "My Profile",
-              options:{label: 'My Profile'},
-              list: MuiInferencer,
-              icon: <AccountCircleOutlined/>
-            },
-          ]}
-          Title={Title}
-          Sider={Sider}
-          Layout={Layout}
-          Header={Header}
-          routerProvider={routerProvider}
-          authProvider={authProvider}
-          LoginPage={Login}
-          DashboardPage={home}
-        />
-      </RefineSnackbarProvider>
+        <CssBaseline />
+        <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
+        <RefineSnackbarProvider>
+            <Refine
+                dataProvider={dataProvider("http://localhost:8080/api/v1")}
+                notificationProvider={notificationProvider}
+                ReadyPage={ReadyPage}
+                catchAll={<ErrorComponent />}
+                resources={[
+                  {
+                    name: "properties",
+                    list: AllProperties,
+                    show: PropertyDetails,
+                    create: CreateProperty,
+                    edit: EditProperty,
+                    icon: <VillaOutlined />,
+                },
+                    {
+                        name: "agents",
+                        list: Agents,
+                        show: AgentProfile,
+                        icon: <PeopleAltOutlined />,
+                    },
+                    {
+                        name: "reviews",
+                        list: home,
+                        icon: <StarOutlineRounded />,
+                    },
+                    {
+                        name: "messages",
+                        list: home,
+                        icon: <ChatBubbleOutline />,
+                    },
+                    {
+                        name: "my-profile",
+                        options: { label: "My Profile " },
+                        list: myProfile,
+                        icon: <AccountCircleOutlined />,
+                    },
+                ]}
+                Title={Title}
+                Sider={Sider}
+                Layout={Layout}
+                Header={Header}
+                routerProvider={routerProvider}
+                authProvider={authProvider}
+                LoginPage={Login}
+                DashboardPage={home}
+            />
+        </RefineSnackbarProvider>
     </ColorModeContextProvider>
-  );
+);
 }
 
 export default App;
